@@ -1,0 +1,74 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "transfer_order_id": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "transfer_order_number": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "date": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "from_location_id": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "from_location_name": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "to_location_id": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "to_location_name": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "status": {
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        "is_intransit_order": {
+            "type": [
+                "boolean",
+                "null"
+            ]
+        },
+        "created_time": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "format": "date-time"
+        },
+        "last_modified_time": {
+            "type": [
+                "null",
+                "string"
+            ],
+            "format": "date-time"
+        }
+    }
+}

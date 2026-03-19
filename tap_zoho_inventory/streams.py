@@ -215,4 +215,47 @@ class AssemblyOrdersDetailsStream(ZohoInventoryStream):
     def parse_response(self, response):
         for record in extract_jsonpath(self.records_jsonpath, input=response.json()):
             record = self.move_custom_fields_to_root(record)
-            yield record    
+            yield record
+
+
+class TransferOrdersStream(ZohoInventoryStream):
+    name = "transfer_orders"
+    path = "/transferorders"
+    records_jsonpath = "$.transfer_orders[*]"
+    replication_key = "last_modified_time"
+    schema_filepath = SCHEMAS_DIR / "transfer_orders_schema.json"
+    has_lines = False
+
+    def get_records(self, context: Optional[dict]) -> Iterable[Dict[str, Any]]:
+        """Get records from the API."""
+        sync_transfer_orders = self.config.get("sync_transfer_orders", False)
+        if not sync_transfer_orders:
+            self.logger.info("Transfer orders sync is disabled in config. Skipping sync.")
+            return []
+
+        return super().get_records(context)
+
+    def post_process(self, row, context):
+        row_last_mod_time = parse(row["last_modified_time"])
+        if row_last_mod_time > self.get_starting_time(context):
+            return super().post_process(row, context)
+
+        return None
+
+    def get_child_context(self, record, context):
+        """Return a child context object for a given record."""
+        return {
+            "transfer_order_id": record["transfer_order_id"],
+        }
+
+
+class TransferOrderDetailsStream(ZohoInventoryStream):
+    name = "transfer_orders_details"
+    path = "/transferorders/{transfer_order_id}"
+    parent_stream_type = TransferOrdersStream
+    records_jsonpath = "$.transfer_order[*]"
+    schema_filepath = SCHEMAS_DIR / "transfer_orders_details_schema.json"
+
+    def parse_response(self, response):
+        for record in extract_jsonpath(self.records_jsonpath, input=response.json()):
+            yield record
