@@ -228,7 +228,7 @@ class TransferOrdersStream(ZohoInventoryStream):
 
     def get_records(self, context: Optional[dict]) -> Iterable[Dict[str, Any]]:
         """Get records from the API."""
-        sync_transfer_orders = self.config.get("sync_transfer_orders", False)
+        sync_transfer_orders = self.config.get("sync_transfer_orders", True)
         if not sync_transfer_orders:
             self.logger.info("Transfer orders sync is disabled in config. Skipping sync.")
             return []
